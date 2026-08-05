@@ -202,23 +202,22 @@ const DEFAULT_ROOMS = [
 
 async function loadState() {
   try {
-    const res = await window.storage.get(STORAGE_KEY, true);
-    if (res && res.value) {
-      state = JSON.parse(res.value);
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      state = JSON.parse(raw);
     } else {
       state = { rooms: DEFAULT_ROOMS, bookings: [] };
       await saveState();
     }
   } catch (e) {
     state = { rooms: DEFAULT_ROOMS, bookings: [] };
-    await saveState();
   }
   render();
 }
 
 async function saveState() {
   try {
-    await window.storage.set(STORAGE_KEY, JSON.stringify(state), true);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   } catch (e) {
     console.error('save failed', e);
   }
